@@ -1,3 +1,4 @@
+import { isEmpty } from "../utils/utils";
 import {
     VDOMNodeUpdater,
     SkipOperation,
@@ -71,7 +72,7 @@ const update = (oldNode: VDOMElement, newNode: VDOMElement): UpdateOperation => 
         set: attributesToSet,
     }
 
-    const childrenUpdater: ChildUpdater[] = childsDiff((oldNode.children ?? []), (newNode.children ?? []))
+    const childrenUpdater: ChildUpdater[] = newChildrenDiff((oldNode.children ?? []), (newNode.children ?? []))
 
     return {
         kind: 'update',
@@ -80,51 +81,51 @@ const update = (oldNode: VDOMElement, newNode: VDOMElement): UpdateOperation => 
     }
 }
 
-const childsDiff = (oldChilds: VDOMNode[], newChilds: VDOMNode[]): ChildUpdater[] => {
+const newChildrenDiff = (oldChildren: VDOMNode[], newnewChildren: VDOMNode[]): ChildUpdater[] => {
 
-    const removeUntilkey = (operations: ChildUpdater[], elems: [string | number, VDOMNode][], key: string | number | undefined) => {
-        while (elems[0] && elems[0][0] != key) {
+    const removeUntilkey = (operations: ChildUpdater[], elems: VDOMNode[], key: string | number | undefined) => {
+        while (!isEmpty(elems) && elems[0].key != key) {
             operations.push(remove())
             elems.shift()
         }
     }
 
-    const insertUntilKey = (operations: ChildUpdater[], elems: [string | number, VDOMNode][], key: string | number | undefined) => {
-        while (elems.length > 0 && elems[0][0] != key) {
-            operations.push(insert(elems.shift()![1]))
+    const insertUntilKey = (operations: ChildUpdater[], elems: VDOMNode[], key: string | number | undefined) => {
+        while (!isEmpty(elems) && elems[0].key != key) {
+            operations.push(insert(elems.shift()!))
         }
     }
 
-    const remainingOldChilds: [string | number, VDOMNode][] = oldChilds.map(c => [c.key, c])
-    const remainingNewChilds: [string | number, VDOMNode][] = newChilds.map(c => [c.key, c])
+    const remainingOldChildren: VDOMNode[] = [...oldChildren]
+    const remainingNewChildren: VDOMNode[] = [...newnewChildren]
 
     const operations: ChildUpdater[] = []
 
     // find the first element that got updated
-    let [nextUpdateKey] = remainingOldChilds.find(k => !remainingNewChilds.map(k => k[0]).includes(k[0])) ?? [null]
+    let nextUpdateKey = remainingOldChildren.find(k => !remainingNewChildren.find(l => l.key === k.key))?.key ?? null
 
     while (nextUpdateKey) {
 
-        // first remove all old childs before the update
-        removeUntilkey(operations, remainingOldChilds, nextUpdateKey)
+        // first remove all old newChildren before the update
+        removeUntilkey(operations, remainingOldChildren, nextUpdateKey)
 
-        // then insert all new childs before the update
-        insertUntilKey(operations, remainingNewChilds, nextUpdateKey)
+        // then insert all new newChildren before the update
+        insertUntilKey(operations, remainingNewChildren, nextUpdateKey)
 
         // create the update
-        if (remainingNewChilds.length > 0 && remainingOldChilds.length > 0) {
-            operations.push(createDiff(remainingOldChilds.shift()![1], remainingNewChilds.shift()![1]));
+        if (!isEmpty(remainingNewChildren) && !isEmpty(remainingOldChildren)) {
+            operations.push(createDiff(remainingOldChildren.shift()!, remainingNewChildren.shift()!));
         }
 
         // find the next update
-        [nextUpdateKey] = remainingOldChilds.find(k => !remainingNewChilds.map(k => k[0]).includes(k[0])) ?? [null]
+        nextUpdateKey = remainingOldChildren.find(k => !remainingNewChildren.find(l => l.key === k.key))?.key ?? null
     }
 
-    // remove all remaing old childs after the last update
-    removeUntilkey(operations, remainingOldChilds, undefined)
+    // remove all remaing old newChildren after the last update
+    removeUntilkey(operations, remainingOldChildren, undefined)
 
-    // insert all remaing new childs after the last update
-    insertUntilKey(operations, remainingNewChilds, undefined)
+    // insert all remaing new newChildren after the last update
+    insertUntilKey(operations, remainingNewChildren, undefined)
 
     return operations
 }
