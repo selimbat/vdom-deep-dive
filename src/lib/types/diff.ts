@@ -14,6 +14,7 @@ export interface UpdateOperation {
 export interface ReplaceOperation {
     kind: 'replace';
     newNode: VDOMNode;
+    callback?: (elem: Element | Text) => void;
 }
 
 export interface SkipOperation {

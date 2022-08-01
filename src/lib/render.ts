@@ -1,9 +1,31 @@
 import { ChildUpdater, VDOMNodeUpdater } from "./types/diff";
 import { VDOMNode } from "./types/vdom"
 
-const renderElement = (rootNode: VDOMNode): HTMLElement | Text => {
+export const renderDOM = (rootNodeId: string, rootNode: VDOMNode) => {
+  const root = document.getElementById(rootNodeId);
+  if (!root) {
+    throw new Error("Could not find root element to attach to the app.")
+  }
+  root.replaceWith(renderElement(rootNode))
+}
+
+const renderElement = (rootNode: VDOMNode): Element | Text => {
   if (rootNode.kind == 'text') {
     return document.createTextNode(rootNode.value)
+  }
+
+  if (rootNode.kind === 'component') {
+    let nodeToRender: VDOMNode;
+    if (rootNode.instance) {
+      nodeToRender = rootNode.instance.render();
+    } else {
+      rootNode.instance = new rootNode.component();
+      nodeToRender = rootNode.instance.initProps(rootNode.props);
+    }
+    
+    const elem = renderElement(nodeToRender);
+    rootNode.instance.notifyMounted(elem);
+    return elem;
   }
 
   const elem = document.createElement(rootNode.tagname)
@@ -25,6 +47,7 @@ export const applyDiff = (elem: Element | Text, diff: VDOMNodeUpdater): Element 
   if (diff.kind == 'replace') {
     const newElem = renderElement(diff.newNode)
     elem.replaceWith(newElem)
+    if (diff.callback) diff.callback(newElem);
     return newElem
   }
 

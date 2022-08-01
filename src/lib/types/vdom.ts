@@ -1,3 +1,5 @@
+import { Component, ComponentProps } from "../component";
+
 export type VDOMAttributes = {
     [_: string]: string | number | boolean | ((_: any) => any);
 };
@@ -16,4 +18,12 @@ export interface VDOMText {
     key: string | number;
 };
 
-export type VDOMNode = VDOMElement | VDOMText; 
+export interface VDOMComponent<P extends ComponentProps = ComponentProps> {
+    kind: 'component';
+    key: string | number;
+    instance: Component | null;
+    props: P;
+    component: { new(): Component };
+}
+
+export type VDOMNode = VDOMElement | VDOMText | VDOMComponent; 

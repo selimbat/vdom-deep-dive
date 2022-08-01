@@ -21,6 +21,30 @@ export const createDiff = (oldNode: VDOMNode, newNode: VDOMNode): VDOMNodeUpdate
         return replace(newNode);
     }
 
+    if (
+        oldNode.kind == 'component' && 
+        newNode.kind == 'component' && 
+        oldNode.component == newNode.component && 
+        oldNode.instance
+    ) {
+        newNode.instance = oldNode.instance
+        if (newNode.props == oldNode.props) {
+            return skip()
+        }
+        return newNode.instance.setProps(newNode.props);
+    }
+
+    if (newNode.kind == 'component') {
+        newNode.instance == new newNode.component()
+        return replace(newNode.instance!.initProps(newNode.props), elem => newNode.instance?.notifyMounted(elem))
+    }
+
+    if (oldNode.kind == 'component') {
+        oldNode.instance?.unmount()
+        oldNode.instance = null
+        return replace(newNode);
+    }
+
     if (oldNode.tagname !== newNode.tagname) {
         return replace(newNode);
     }
@@ -30,13 +54,17 @@ export const createDiff = (oldNode: VDOMNode, newNode: VDOMNode): VDOMNodeUpdate
 
 }
 
-const skip = (): SkipOperation => ({
+export const skip = (): SkipOperation => ({
     kind: 'skip',
 });
 
-const replace = (newNode: VDOMNode): ReplaceOperation => ({
+const replace = (
+    newNode: VDOMNode,
+    callback?: (node: Element | Text) => void
+): ReplaceOperation => ({
     kind: 'replace',
     newNode,
+    callback,
 });
 
 const remove = (): RemoveOperation => ({
@@ -85,6 +113,10 @@ const newChildrenDiff = (oldChildren: VDOMNode[], newnewChildren: VDOMNode[]): C
 
     const removeUntilkey = (operations: ChildUpdater[], elems: VDOMNode[], key: string | number | undefined) => {
         while (!isEmpty(elems) && elems[0].key != key) {
+            if (elems[0].kind == 'component') {
+                elems[0].instance?.unmount();
+                elems[0].instance == null;
+            }
             operations.push(remove())
             elems.shift()
         }

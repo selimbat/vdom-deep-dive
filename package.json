@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,10 @@
   "homepage": "https://github.com/selimbat/vdom-deep-dive#readme",
   "devDependencies": {
     "source-map-loader": "^4.0.0",
+    "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
   },
-  "dependencies": {
-    "ts-loader": "^9.3.1"
-  }
+  "dependencies": {}
 }
