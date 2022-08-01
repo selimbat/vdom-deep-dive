@@ -26,9 +26,12 @@ class NewItemForm extends Component<NewItemFormProps, NewItemFormState> {
             },
             createElement('label', { key: 'l-n', 'for': 'i-n' }, createText('New item')),
             createElement('input',
-                { key: 'i-n', id: 'i-n', 
-                  value: this.state.name,
-                  oninput: (e: any) => this.setState(s => ({...s, name: e.target.value})) }
+                { 
+                    key: 'i-n',
+                    id: 'i-n',
+                    value: this.state.name,
+                    oninput: (e: any) => this.setState(s => Object.assign(s, { name: e.target.value}))
+                }
             ),
         )
     }
@@ -67,7 +70,7 @@ class ToDoComponent extends Component<{}, ToDoState> {
                                 key: 'btn',
                                 onclick: () => this.toggleItem(i)
                             }, 
-                            createText(item.done ? 'done' : '-')),
+                            createText(item.done ? '✅' : '⬜')),
                         createText(item.name, 'label')
                 ))
             )
