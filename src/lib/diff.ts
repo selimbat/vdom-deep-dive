@@ -22,9 +22,9 @@ export const createDiff = (oldNode: VDOMNode, newNode: VDOMNode): VDOMNodeUpdate
     }
 
     if (
-        oldNode.kind == 'component' && 
-        newNode.kind == 'component' && 
-        oldNode.component == newNode.component && 
+        oldNode.kind == 'component' &&
+        newNode.kind == 'component' &&
+        oldNode.component == newNode.component &&
         oldNode.instance
     ) {
         newNode.instance = oldNode.instance
@@ -109,9 +109,11 @@ const update = (oldNode: VDOMElement, newNode: VDOMElement): UpdateOperation => 
     }
 }
 
-const newChildrenDiff = (oldChildren: VDOMNode[], newnewChildren: VDOMNode[]): ChildUpdater[] => {
+const newChildrenDiff = (oldChildren: VDOMNode[], newChildren: VDOMNode[]): ChildUpdater[] => {
 
-    const removeUntilkey = (operations: ChildUpdater[], elems: VDOMNode[], key: string | number | undefined) => {
+    const operations: ChildUpdater[] = []
+
+    const removeUntilkey = (elems: VDOMNode[], key: string | number | undefined) => {
         while (!isEmpty(elems) && elems[0].key != key) {
             if (elems[0].kind == 'component') {
                 elems[0].instance?.unmount();
@@ -122,27 +124,28 @@ const newChildrenDiff = (oldChildren: VDOMNode[], newnewChildren: VDOMNode[]): C
         }
     }
 
-    const insertUntilKey = (operations: ChildUpdater[], elems: VDOMNode[], key: string | number | undefined) => {
+    const insertUntilKey = (elems: VDOMNode[], key: string | number | undefined) => {
         while (!isEmpty(elems) && elems[0].key != key) {
             operations.push(insert(elems.shift()!))
         }
     }
 
     const remainingOldChildren: VDOMNode[] = [...oldChildren]
-    const remainingNewChildren: VDOMNode[] = [...newnewChildren]
+    const remainingNewChildren: VDOMNode[] = [...newChildren]
 
-    const operations: ChildUpdater[] = []
 
     // find the first element that got updated
-    let nextUpdateKey = remainingOldChildren.find(k => !remainingNewChildren.find(l => l.key === k.key))?.key ?? null
+    let nextUpdateKey = remainingOldChildren.find(k =>
+        remainingNewChildren.find(l => l.key === k.key) !== undefined
+    )?.key ?? null;
 
-    while (nextUpdateKey) {
+    while (nextUpdateKey !== null) {
 
         // first remove all old newChildren before the update
-        removeUntilkey(operations, remainingOldChildren, nextUpdateKey)
+        removeUntilkey(remainingOldChildren, nextUpdateKey)
 
         // then insert all new newChildren before the update
-        insertUntilKey(operations, remainingNewChildren, nextUpdateKey)
+        insertUntilKey(remainingNewChildren, nextUpdateKey)
 
         // create the update
         if (!isEmpty(remainingNewChildren) && !isEmpty(remainingOldChildren)) {
@@ -150,14 +153,16 @@ const newChildrenDiff = (oldChildren: VDOMNode[], newnewChildren: VDOMNode[]): C
         }
 
         // find the next update
-        nextUpdateKey = remainingOldChildren.find(k => !remainingNewChildren.find(l => l.key === k.key))?.key ?? null
+        nextUpdateKey = remainingOldChildren.find(k =>
+            remainingNewChildren.find(l => l.key === k.key) !== undefined
+        )?.key ?? null
     }
 
     // remove all remaing old newChildren after the last update
-    removeUntilkey(operations, remainingOldChildren, undefined)
+    removeUntilkey(remainingOldChildren, undefined)
 
     // insert all remaing new newChildren after the last update
-    insertUntilKey(operations, remainingNewChildren, undefined)
+    insertUntilKey(remainingNewChildren, undefined)
 
     return operations
 }

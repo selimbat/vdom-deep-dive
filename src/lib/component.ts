@@ -29,13 +29,14 @@ export abstract class Component<
     const newState = updater(this.state)
     if (newState !== this.state) {
       this.state = newState
-      applyDiff(this.mountedElement, this.getUpdateDiff())
+      const diff = this.getUpdateDiff();
+      applyDiff(this.mountedElement, diff)
     }
   }
 
   public setProps(props: P): VDOMNodeUpdater {
     if (!this.mountedElement) {
-      throw new Error("Setting the props of an inmounted component")
+      throw new Error("Setting the props of an unmounted component")
     }
     const newState = this.componentWillRecieveProps(props, this.state)
     if (newState !== this.state || props !== this.props) {
