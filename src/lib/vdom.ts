@@ -8,11 +8,17 @@ export const createElement = (
     const key = props.key;
     const propsToPass: VDOMAttributes = props;
     delete propsToPass.key;
+
+    const processedChildren = children.map(ch => {
+        if (typeof ch !== 'string') return ch;
+        return createText(ch)
+    })
+
     return ({
         kind: 'element',
         tagname,
         props: propsToPass,
-        children,
+        children: processedChildren,
         key
     })
 }
