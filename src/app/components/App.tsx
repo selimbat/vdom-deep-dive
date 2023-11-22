@@ -1,5 +1,4 @@
-import { Component, createComponent } from "../../lib/component"
-import { createElement, createText } from "../../lib/vdom"
+import { Component } from "../../lib/component"
 import { makeStyle } from "../../utils/style"
 import NewItemForm from "./NewItemForm"
 import ToDoItem from "./ToDoItem"
@@ -49,31 +48,29 @@ export default class App extends Component<{}, ToDoState> {
                 width: '30rem',
             }
         }
-
-        return createElement('div',
-            {
-                key: 'root',
-                style: makeStyle(styles.root),
-            },
-            createComponent(NewItemForm, {
-                key: 'form',
-                addItem: n => this.setState(s => ({ items: s.items.concat([{ name: n, done: false }]) }))
-            }),
-            createElement('ul',
-                {
-                    style: makeStyle(styles.toDoList),
-                    key: 'items',
-                },
-                ...this.state.items.map((item: ToDoState['items'][number], i) =>
-                    createComponent(ToDoItem, {
-                        key: i,
-                        name: item.name,
-                        done: item.done,
-                        toggleItem: () => this.toggleItem(i),
-                        removeItem: () => this.removeItem(i),
-                    })
-                )
-            )
-        )
+        return (
+            <div style={makeStyle(styles.root)} key="root">
+                <NewItemForm
+                    addItem={(n: string) => {
+                        this.setState(s => ({ items: s.items.concat([{ name: n, done: false }]) }))
+                    }}
+                    key="form"
+                />
+                <ul
+                    style={makeStyle(styles.toDoList)}
+                    key="items"
+                >
+                    {this.state.items.map((item: ToDoState['items'][number], i) => (
+                        <ToDoItem
+                            key={i}
+                            name={item.name}
+                            done={item.done}
+                            toggleItem={() => this.toggleItem(i)}
+                            removeItem={() => this.removeItem(i)}
+                        />
+                    ))}
+                </ul>
+            </div>
+        );
     }
 }

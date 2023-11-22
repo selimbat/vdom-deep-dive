@@ -33,7 +33,7 @@ export function jsxs<P extends ComponentProps>(
     return createElement(
         tagOrComponent,
         props as VDOMAttributes & { key: string | number },
-        ...children
+        ...(Array.isArray(children) ? children : [children])
     );
 }
 

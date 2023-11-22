@@ -2,10 +2,11 @@ export { }
 
 declare global {
     namespace JSX {
-        interface IntrinsicElements {
-            li: any,
-            button: any,
-            span: any
+
+        type IntrinsicElementsTags = keyof HTMLElementTagNameMap;
+
+        type IntrinsicElements = {
+            [tag in IntrinsicElementsTags]: any; // TODO type this properly
         }
     }
 }

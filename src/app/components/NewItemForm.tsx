@@ -31,36 +31,33 @@ export default class NewItemForm extends Component<NewItemFormProps, NewItemForm
                 fontSize: 'inherit',
             }
         }
-        return createElement(
-            'form',
-            {
-                style: makeStyle(styles.form),
-                key: 'new-item-form',
-                onsubmit: (e: Event) => {
+        return (
+            <form
+                style={makeStyle(styles.form)}
+                key="new-item-form"
+                onsubmit={(e: Event) => {
                     e.preventDefault();
                     if (this.state.name) {
                         this.props.addItem(this.state.name);
                         this.setState(() => ({ name: '' }));
                     }
-                }
-            },
-            createElement('label',
-                {
-                    style: makeStyle(styles.label),
-                    key: 'form-label',
-                    for: 'form-input'
-                },
-                createText('My To Do App')
-            ),
-            createElement('input',
-                {
-                    style: makeStyle(styles.input),
-                    key: 'form-input',
-                    id: 'form-input',
-                    value: this.state.name,
-                    oninput: (e: any) => this.setState(s => Object.assign(s, { name: e.target.value }))
-                }
-            ),
+                }}
+            >
+                <label
+                    style={makeStyle(styles.label)}
+                    key="form-label"
+                    for="form-input"
+                >
+                    My To Do App
+                </label>
+                <input
+                    style={makeStyle(styles.input)}
+                    key='form-input'
+                    id='form-input'
+                    value={this.state.name}
+                    oninput={(e: any) => this.setState(s => Object.assign(s, { name: e.target.value }))}
+                />
+            </form>
         )
     }
 }

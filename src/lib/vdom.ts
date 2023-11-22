@@ -3,7 +3,7 @@ import { VDOMAttributes, VDOMNode, VDOMElement, VDOMText } from "./types/vdom"
 export const createElement = (
     tagname: string,
     props: VDOMAttributes & { key: string | number },
-    ...children: VDOMNode[]
+    ...children: (VDOMNode | string)[]
 ): VDOMElement => {
     const key = props.key;
     const propsToPass: VDOMAttributes = props;
