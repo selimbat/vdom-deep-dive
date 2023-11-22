@@ -1,0 +1,21 @@
+{
+    "presets": [
+        [
+            "@babel/preset-react",
+            {
+                // "pragma": "MyLib.createElement", // default pragma is React.createElement (only in classic runtime)
+                // "pragmaFrag": "DomFrag", // default is React.Fragment (only in classic runtime)
+                "runtime": "automatic", // defaults to classic
+                "importSource": "lib" // defaults to react (only in automatic runtime)
+            }
+        ],
+        [
+            "@babel/preset-typescript",
+            {
+                "isTSX": true,
+                "allExtensions": true,
+                "jsxPragma": "myCustomJSX"
+            }
+        ]
+    ]
+}

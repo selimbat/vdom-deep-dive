@@ -22,12 +22,11 @@ const renderElement = (rootNode: VDOMNode): Element | Text => {
       rootNode.instance = new rootNode.component();
       nodeToRender = rootNode.instance.initProps(rootNode.props);
     }
-    
+
     const elem = renderElement(nodeToRender);
     rootNode.instance.notifyMounted(elem);
     return elem;
   }
-
   const elem = document.createElement(rootNode.tagname)
 
   for (const att in (rootNode.props ?? {})) {
@@ -42,7 +41,7 @@ const renderElement = (rootNode: VDOMNode): Element | Text => {
 }
 
 export const applyDiff = (elem: Element | Text, diff: VDOMNodeUpdater): Element | Text => {
-  if (diff.kind == 'skip') return elem 
+  if (diff.kind == 'skip') return elem
 
   if (diff.kind == 'replace') {
     const newElem = renderElement(diff.newNode)
@@ -84,7 +83,7 @@ const applyChildrenDiff = (elem: Element, operations: ChildUpdater[]) => {
       }
       continue
     }
-    
+
     const childElem = elem.childNodes[i + offset]
 
     if (childUpdater.kind == 'remove') {

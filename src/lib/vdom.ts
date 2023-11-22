@@ -2,7 +2,7 @@ import { VDOMAttributes, VDOMNode, VDOMElement, VDOMText } from "./types/vdom"
 
 export const createElement = (
     tagname: string,
-    props: VDOMAttributes & { key: string },
+    props: VDOMAttributes & { key: string | number },
     ...children: VDOMNode[]
 ): VDOMElement => {
     const key = props.key;

@@ -31,7 +31,6 @@ export default class NewItemForm extends Component<NewItemFormProps, NewItemForm
                 fontSize: 'inherit',
             }
         }
-
         return createElement(
             'form',
             {
