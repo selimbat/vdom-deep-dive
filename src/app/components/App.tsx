@@ -1,5 +1,5 @@
-import { Component } from "../../lib/component"
-import { makeStyle } from "../../utils/style"
+import { Component } from "lib/component"
+import { makeStyle } from "utils/style"
 import NewItemForm from "./NewItemForm"
 import ToDoItem from "./ToDoItem"
 
@@ -48,6 +48,7 @@ export default class App extends Component<{}, ToDoState> {
                 width: '30rem',
             }
         }
+
         return (
             <div style={makeStyle(styles.root)} key="root">
                 <NewItemForm

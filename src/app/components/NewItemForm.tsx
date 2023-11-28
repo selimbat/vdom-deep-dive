@@ -1,6 +1,5 @@
-import { Component } from "../../lib/component"
-import { createElement, createText } from "../../lib/vdom"
-import { makeStyle } from "../../utils/style"
+import { Component } from "lib/component"
+import { makeStyle } from "utils/style"
 
 
 interface NewItemFormState {

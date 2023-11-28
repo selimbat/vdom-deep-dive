@@ -1,10 +1,12 @@
 {
-  "name": "vdom-deep-dive",
+  "name": "@selimbat/vdom-deep-dive",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/@types/index.d.ts",
   "scripts": {
-    "build": "webpack"
+    "emitTypes": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --declarationDir ./dist/@types --skipLibCheck",
+    "build:app": "webpack --config ./webpack.app.config.js",
+    "build:lib": "webpack --config ./webpack.lib.config.js && npm run emitTypes"
   },
   "repository": {
     "type": "git",
@@ -27,5 +29,9 @@
     "typescript": "^4.7.4",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
-  }
+  },
+  "description": "",
+  "files": [
+    "/dist"
+  ]
 }

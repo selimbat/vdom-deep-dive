@@ -1,5 +1,5 @@
-import { Component } from "../../lib/component"
-import { makeStyle } from "../../utils/style";
+import { Component } from "lib/component"
+import { makeStyle } from "utils/style";
 
 interface ToDoItemProps {
     name: string;
@@ -32,7 +32,12 @@ export default class ToDoItem extends Component<ToDoItemProps, {}> {
                 >
                     {this.props.done ? '✅' : '⬜'}
                 </button>
-                <span key="text-span">{this.props.name}</span>
+                <span
+                    style={makeStyle(styles.text)}
+                    key="text-span"
+                >
+                    {this.props.name}
+                </span>
                 <button
                     style='margin-left: auto;'
                     key='remove-btn'
