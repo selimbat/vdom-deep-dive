@@ -30,7 +30,13 @@ const renderElement = (rootNode: VDOMNode): Element | Text => {
   const elem = document.createElement(rootNode.tagname)
 
   for (const att in (rootNode.props ?? {})) {
-    (elem as any)[att] = rootNode.props ? rootNode.props[att] : undefined;
+    const attValue = rootNode.props?.[att];
+
+    if (att.startsWith('data-') && attValue) {
+      elem.dataset[att] = attValue?.toString()
+      continue;
+    }
+    (elem as any)[att] = attValue;
   }
 
   (rootNode.children ?? []).forEach(child =>
