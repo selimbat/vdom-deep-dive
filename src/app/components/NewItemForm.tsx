@@ -47,7 +47,7 @@ export default class NewItemForm extends Component<NewItemFormProps, NewItemForm
                     key="form-label"
                     for="form-input"
                 >
-                    My To Do App
+                    My To Do Buzz App
                 </label>
                 <input
                     style={makeStyle(styles.input)}

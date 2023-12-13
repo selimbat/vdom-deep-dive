@@ -23,6 +23,6 @@ export const createElement = (
     })
 }
 
-export const createText = (value: string | number | boolean, key: string = ''): VDOMText => ({
+const createText = (value: string | number | boolean, key: string = ''): VDOMText => ({
     key, kind: 'text', value: value.toString()
 })

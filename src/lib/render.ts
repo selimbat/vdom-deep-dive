@@ -33,7 +33,12 @@ const renderElement = (rootNode: VDOMNode): Element | Text => {
     const attValue = rootNode.props?.[att];
 
     if (att.startsWith('data-') && attValue) {
-      elem.dataset[att] = attValue?.toString()
+      const dataAttribute = att
+        .replace('data-', '')
+        .replace(/-\w/,
+          (m) => m.replace('-', '').toUpperCase()
+        );
+      elem.dataset[dataAttribute] = attValue.toString()
       continue;
     }
     (elem as any)[att] = attValue;
